@@ -20,25 +20,14 @@ app.get("/", function (req, res) {
 
 
 // your first API endpoint... 
-app.get("/api/timestamp/:date_string", (req, res) => {
-  let dateString = req.params.date_string;
-
-  //A 4 digit number is a valid ISO-8601 for the beginning of that year
-  //5 digits or more must be a unix time, until we reach a year 10,000 problem
-  if (/\d{5,}/.test(dateString)) {
-    let dateInt = parseInt(dateString);
-    //Date regards numbers as unix timestamps, strings are processed differently
-    res.json({ unix: dateString, utc: new Date(dateInt).toUTCString() });
-  } else {
-    let dateObject = new Date(dateString);
-
-    if (dateObject.toString() === "Invalid Date") {
-      res.json({ error: "Invalid Date" });
-    } else {
-      res.json({ unix: dateObject.valueOf(), utc: dateObject.toUTCString() });
-    }
-  }
-});
+app.get("/api", (req, res)=>{
+  let date = new Date();
+  let UTC = date.getTime()+20000;
+  UTC = new Date(UTC);
+  UTS = UTC.toUTCString();
+  let UNIX = date.getTime()+20000;
+  res.json({ unix: UNIX, utc: UTS });
+})
 app.get("/api/:date?", (req, res) => {
   let date
   if (/^\d+$/.test(req.params.date)) {
@@ -49,20 +38,13 @@ app.get("/api/:date?", (req, res) => {
   if (isNaN(date)) {
     return res.json({ error: 'Invalid Date' })
   }
-  console.log(date.getTime())
-  res.json({
+  let jason = {
     unix: new Date(date).getTime(),
     utc: new Date(date).toUTCString()
-  })
+  }
+  console.log(jason)
+  res.json(jason)
 })
-app.get('/api', (req, res) => {
-  console.log(new Date().getTime())
-  res.json({
-      unix: new Date().getTime(),
-      utc: new Date().toUTCString()
-  })
-})
-
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
